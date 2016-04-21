@@ -38,14 +38,28 @@ app.on('ready', function () {
         mainWindow.loadURL('file://' + __dirname + '/app.html');
     }
 
-    if (env.name !== 'production') {
-        devHelper.setDevMenu();
-        mainWindow.openDevTools();
-    }
+    // if (env.name !== 'production') {
+    //     devHelper.setDevMenu();
+    //     mainWindow.openDevTools();
+    // }
 
     mainWindow.on('close', function () {
         mainWindowState.saveState(mainWindow);
     });
+
+
+    // TEST DID-FAIL-LOAD EVENT ON DOWNLOAD ==================================
+
+    mainWindow.webContents.on('did-fail-load', function (event, code, desc, url, isMainFrame) {
+        // downloading a file will emit this event and log this to the console
+        console.log('DID FAIL LOAD: ', code, desc, url);
+        // and then this will cause Electron to crash
+        mainWindow.loadURL('file://' + __dirname + '/error.html')
+    });
+
+    // ========================================================================
+
+
 });
 
 app.on('window-all-closed', function () {
